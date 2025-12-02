@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, Subject, switchMap } from 'rxjs';
+import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
 import { RickAndMorty } from '../../services/rick-and-morty';
 import { Episode } from '../../shared/episode.model';
 
@@ -11,7 +11,7 @@ import { Episode } from '../../shared/episode.model';
 })
 export class SearchEpisodes {
   @Output() episodeSelected = new EventEmitter<number>();
-  
+
   searchText: string = '';
   results: Episode[] = [];
   loading: boolean = false;
@@ -25,19 +25,17 @@ export class SearchEpisodes {
         debounceTime(400),
         switchMap((text) => {
           this.loading = true;
-          return this._episodeService.searchEpisodes(text);
-        })
+          return this._episodeService.searchEpisodes(text).pipe(
+            catchError(() => {
+              return of([]);
+            })
+          );
+        }),
+        takeUntilDestroyed()
       )
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        next: (episodes: Episode[]) => {
-          this.results = episodes ?? [];
-          this.loading = false;
-        },
-        error: () => {
-          this.results = [];
-          this.loading = false;
-        },
+      .subscribe((episodes: Episode[]) => {
+        this.results = episodes;
+        this.loading = false;
       });
   }
 
