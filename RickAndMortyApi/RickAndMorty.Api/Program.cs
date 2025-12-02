@@ -1,9 +1,8 @@
 using Microsoft.OpenApi.Models;
 using RickAndMorty.Infra;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -17,6 +16,10 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API for searching Rick and Morty related information.",
     });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
 });
 
 var app = builder.Build();

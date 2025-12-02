@@ -31,8 +31,10 @@ namespace RickAndMorty.Api.Controllers
         /// <response code="400">
         ///     Returned when the provided episode ID is invalid or the request cannot be processed.
         /// </response>
-        [ProducesResponseType(typeof(ApiResponse<List<Character>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+        /// /// <response code="404">Episode or characters not found.</response>
+        [ProducesResponseType(typeof(List<Character>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<List<Character>>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<List<Character>>), StatusCodes.Status404NotFound)]
         [HttpGet("{episodeId:int}")]
         public async Task<IActionResult> Get(int episodeId)
         {
@@ -59,9 +61,11 @@ namespace RickAndMorty.Api.Controllers
         ///     A list of episodes matching the given filters (could be empty).
         /// </returns>
         /// <response code="200">Returns filtered list of episodes.</response>
+        /// <response code="404">Episodes not found.</response>
         /// <response code="500">Error fetching episodes from external API.</response>
-        [ProducesResponseType(typeof(ApiResponse<List<Episode>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(List<Episode>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<List<Episode>>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<List<Episode>>), StatusCodes.Status500InternalServerError)]
         [HttpGet("search")]
         public async Task<IActionResult> SearchEpisodes([FromQuery] string? name, [FromQuery] string? episode)
         {
