@@ -5,63 +5,79 @@
     ></app-search-episodes>
 
     @if (characters.length > 0) {
-      <div class="mt-4 flex justify-end items-center gap-4">
-        <div class="relative">
-          <select
+    <div #controlsContainer class="mt-4 flex justify-end items-center gap-4">
+      <div class="relative">
+        <select
           [(ngModel)]="selectedGroup"
           (change)="groupBy()"
-          class="px-4 py-2 border rounded-md hover:bg-blue-100 transition-colors"
-          >
+          class="block w-full appearance-none px-4 py-2 pr-8 border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400 transition-colors"
+        >
           <option value="" disabled selected>Group By</option>
           @for (field of groupFields; track $index) {
-            <option [value]="field">
-              {{ field }}
-            </option>
+          <option [value]="field">
+            {{ field === "None" ? "None – do not group" : field }}
+          </option>
           }
         </select>
+        <div
+          class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        </div>
       </div>
 
       <button
         (click)="toggleSort()"
         class="px-4 py-2 text-black border rounded-md hover:bg-blue-300 transition-colors"
       >
-        {{ sortAsc ? 'Sort Descending' : 'Sort Ascending' }}
+        {{ sortAsc ? "Sort Descending" : "Sort Ascending" }}
       </button>
-      </div>
+    </div>
 
-      @if (getCharacterGroupedKeys().length > 0) {
-        @for (characterGroupedKey of getCharacterGroupedKeys(); track $index) {
-          <div class="mt-6">
-            <h2 class="text-xl font-semibold mb-2 text-gray-700">{{ characterGroupedKey }}</h2>
-            <div class="grid gap-6 justify-center"
-                 style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
-              @for (char of charactersGrouped[characterGroupedKey]; track char.id) {
-                <app-character-card [character]="char"></app-character-card>
-              }
-            </div>
-          </div>
+    @if (getCharacterGroupedKeys().length > 0) { @for (characterGroupedKey of
+    getCharacterGroupedKeys(); track $index) {
+    <div class="mt-6">
+      <h2 class="text-xl font-semibold mb-2 text-gray-700">
+        {{ characterGroupedKey }}
+      </h2>
+      <div
+        class="grid gap-6 justify-center"
+        style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))"
+      >
+        @for (char of charactersGrouped[characterGroupedKey]; track char.id) {
+        <app-character-card [character]="char"></app-character-card>
         }
-      }
-      @else {
-        <div class="mt-4 grid gap-6 justify-center"
-             style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
-          @for (char of characters; track char.id) {
-            <app-character-card [character]="char"></app-character-card>
-          }
-        </div>
-      }
-    }
-
-    @if (!loading && characters.length === 0 && lastEpisodeSelected) {
-      <div class="mt-8 text-center text-gray-600 text-lg">
-        No characters found for this episode.
       </div>
-    }
-
-    @if (loading) {
-      <div class="mt-8 text-center text-gray-500 text-lg">
-        Loading characters...
-      </div>
+    </div>
+    } } @else {
+    <div
+      class="mt-4 grid gap-6 justify-center"
+      style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))"
+    >
+      @for (char of characters; track char.id) {
+      <app-character-card [character]="char"></app-character-card>
+      }
+    </div>
+    } } @if (!loading && characters.length === 0 && lastEpisodeSelected) {
+    <div class="mt-8 text-center text-gray-600 text-lg">
+      No characters found for this episode.
+    </div>
+    } @if (loading) {
+    <div class="mt-8 text-center text-gray-500 text-lg">
+      Loading characters...
+    </div>
     }
   </div>
 </div>

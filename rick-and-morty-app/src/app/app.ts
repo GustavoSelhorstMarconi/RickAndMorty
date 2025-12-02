@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { CharacterCard } from './components/character-card/character-card';
@@ -14,8 +14,9 @@ import { Character } from './shared/character.model';
 })
 export class App {
   private readonly _rickAndMortyService = inject(RickAndMorty);
-
   private destroyRef = inject(DestroyRef);
+  @ViewChild('controlsContainer')
+  controlsContainer!: ElementRef<HTMLDivElement>;
 
   characters: Character[] = [];
   loading: boolean = false;
@@ -50,6 +51,12 @@ export class App {
           this.characters = chars;
           this.loading = false;
           this.groupBy();
+          setTimeout(() => {
+            this.controlsContainer?.nativeElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
+          }, 50);
         },
         error: () => {
           this.characters = [];
