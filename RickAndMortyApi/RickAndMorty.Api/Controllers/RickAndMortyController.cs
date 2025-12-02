@@ -28,13 +28,11 @@ namespace RickAndMorty.Api.Controllers
         /// <response code="200">
         ///     Successfully returns the list of characters for the episode.
         /// </response>
-        /// <response code="400">
-        ///     Returned when the provided episode ID is invalid or the request cannot be processed.
-        /// </response>
-        /// /// <response code="404">Episode or characters not found.</response>
+        /// <response code="404">Episode or characters not found.</response>
+        /// <response code="500">Error when searching for characters.</response>
         [ProducesResponseType(typeof(List<Character>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<List<Character>>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<List<Character>>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<List<Character>>), StatusCodes.Status500InternalServerError)]
         [HttpGet("{episodeId:int}")]
         public async Task<IActionResult> Get(int episodeId)
         {
@@ -43,7 +41,7 @@ namespace RickAndMorty.Api.Controllers
             if (response.StatusCode is >= 200 and < 300)
                 return Ok(response.Data);
             else if (response.StatusCode is >= 400 and < 500)
-                return BadRequest(response);
+                return NotFound(response);
             else
                 return StatusCode(response.StatusCode, response);
         }
@@ -74,7 +72,7 @@ namespace RickAndMorty.Api.Controllers
             if (response.StatusCode is >= 200 and < 300)
                 return Ok(response.Data);
             else if (response.StatusCode is >= 400 and < 500)
-                return BadRequest(response);
+                return NotFound(response);
             else
                 return StatusCode(response.StatusCode, response);
         }
