@@ -45,3 +45,8 @@ docker compose up --build
 ## Next Steps
 - Use DTOs in the backend to return only necessary information between layers, avoiding exposing internal entities directly.
 - Implement unit and integration tests for backend services and Angular components.
+- Show placeholders while data is loading.
+- Allow users to switch between light and dark themes.
+- Lazy loading / virtual scrolling: For character lists, render only visible items to prevent lag with long lists.
+- Throttle requests: Avoid overloading the Rick and Morty API (rate limits).
+- Ensure the search input cannot execute malicious code.
