@@ -4,29 +4,52 @@
       (episodeSelected)="onEpisodeSelected($event)"
     ></app-search-episodes>
 
-     @if (characters.length > 0) {
-      <div class="mt-4 flex justify-end">
-        <button
-          (click)="toggleSort()"
-          class="px-4 py-2 text-black border rounded-md hover:bg-blue-300 transition-colors"
-        >
-          {{ sortAsc ? 'Sort Descending' : 'Sort Ascending' }}
-        </button>
-      </div>
-
-      <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        @for (char of characters; track char.id) {
-          <app-character-card [character]="char"></app-character-card>
-        }
-      </div>
-    }
-
     @if (characters.length > 0) {
-      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        @for (char of characters; track char.id) {
-          <app-character-card [character]="char"></app-character-card>
-        }
+      <div class="mt-4 flex justify-end items-center gap-4">
+        <div class="relative">
+          <select
+          [(ngModel)]="selectedGroup"
+          (change)="groupBy()"
+          class="px-4 py-2 border rounded-md hover:bg-blue-100 transition-colors"
+          >
+          <option value="" disabled selected>Group By</option>
+          @for (field of groupFields; track $index) {
+            <option [value]="field">
+              {{ field }}
+            </option>
+          }
+        </select>
       </div>
+
+      <button
+        (click)="toggleSort()"
+        class="px-4 py-2 text-black border rounded-md hover:bg-blue-300 transition-colors"
+      >
+        {{ sortAsc ? 'Sort Descending' : 'Sort Ascending' }}
+      </button>
+      </div>
+
+      @if (getCharacterGroupedKeys().length > 0) {
+        @for (characterGroupedKey of getCharacterGroupedKeys(); track $index) {
+          <div class="mt-6">
+            <h2 class="text-xl font-semibold mb-2 text-gray-700">{{ characterGroupedKey }}</h2>
+            <div class="grid gap-6 justify-center"
+                 style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+              @for (char of charactersGrouped[characterGroupedKey]; track char.id) {
+                <app-character-card [character]="char"></app-character-card>
+              }
+            </div>
+          </div>
+        }
+      }
+      @else {
+        <div class="mt-4 grid gap-6 justify-center"
+             style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+          @for (char of characters; track char.id) {
+            <app-character-card [character]="char"></app-character-card>
+          }
+        </div>
+      }
     }
 
     @if (!loading && characters.length === 0 && lastEpisodeSelected) {

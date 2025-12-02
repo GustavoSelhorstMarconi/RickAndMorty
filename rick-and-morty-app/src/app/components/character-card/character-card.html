@@ -17,11 +17,7 @@
     <div class="mt-2 text-sm text-gray-700 space-y-1 flex-1 overflow-hidden">
       <div><span class="font-semibold">Status:</span> {{ character.status }}</div>
       <div><span class="font-semibold">Species:</span> {{ character.species }}</div>
-
-      @if (character.type) {
-        <div><span class="font-semibold">Type:</span> {{ character.type }}</div>
-      }
-
+      <div><span class="font-semibold">Type:</span> {{ character.type || 'Unknown' }}</div>
       <div><span class="font-semibold">Gender:</span> {{ character.gender }}</div>
     </div>
 
