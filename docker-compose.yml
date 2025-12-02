@@ -1,0 +1,22 @@
+services:
+  api:
+    build:
+      context: ./RickAndMortyApi
+    container_name: rickandmorty-api
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - BaseRickAndMortyApiRoute=https://rickandmortyapi.com/api/
+      - ASPNETCORE_URLS=http://+:80
+
+  web:
+    build:
+      context: ./rick-and-morty-app
+    environment:
+      - API_URL=http://api:80
+    container_name: rickandmorty-web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api

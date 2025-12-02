@@ -35,3 +35,4 @@ obj/
 .idea/
 
 appsettings.*.json
+RickAndMortyApi/RickAndMorty.Api/appsettings*.json
