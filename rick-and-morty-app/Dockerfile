@@ -1,23 +1,10 @@
-FROM node:lts-slim AS build
-WORKDIR /src
+FROM node:22 AS build
+WORKDIR /app
+COPY . .
+RUN npm install
+RUN npm run build
 
-RUN npm install -g @angular/cli@latest
-
-COPY package*.json ./
-RUN npm ci
-
-COPY . ./
-
-ARG API_URL
-RUN echo "export const environment = { production: true, apiBaseUrl: '$API_URL' };" > src/environments/environment.prod.ts
-
-RUN ng build --configuration=production
-
-FROM nginx:stable
+FROM nginx:alpine
+COPY --from=build /app/dist/rick-and-morty-app/browser usr/share/nginx/html
 EXPOSE 80
-
-RUN rm -rf /usr/share/nginx/html/*
-
-COPY --from=build /src/dist/rick-and-morty-app/browser/ /usr/share/nginx/html/
-
 CMD ["nginx", "-g", "daemon off;"]
